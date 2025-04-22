@@ -12,5 +12,40 @@
     "title": "1  Introducing Feature Engineering",
     "section": "What is feature engineering? - (video)",
     "text": "What is feature engineering? - (video)"
+  },
+  {
+    "objectID": "01-FE.html#a-tentative-model",
+    "href": "01-FE.html#a-tentative-model",
+    "title": "1  Introducing Feature Engineering",
+    "section": "1.1 A Tentative Model",
+    "text": "1.1 A Tentative Model\nYou are handed a data set with measures of the gravitational force between two bodies at different distances and are challenged to build a simple model to predict such force given a specific distance. Initially, you want to stick to simple linear regression. The data consist of 120 pairs of distance and force, and is loaded for you as newton."
+  },
+  {
+    "objectID": "01-FE.html#instructions",
+    "href": "01-FE.html#instructions",
+    "title": "1  Introducing Feature Engineering",
+    "section": "Instructions",
+    "text": "Instructions\n\nBuild a linear model for the newton data using the linear model from base R function and assign it to lr_force.\nCreate a new data frame df by binding the prediction values to the original newton data.\nGenerate a scatterplot of force versus distance using ggplot().\nAdd a regression line to the scatterplot with the fitted values.\n\n\n# Build a linear model for the newton the data and assign it to lr_force\nlr_force &lt;- lm(force ~ distance, data = newton)\n\n# Create a new data frame by binding the prediction values to the original data\ndf &lt;- newton %&gt;% bind_cols(lr_pred = predict(lr_force))\n\n# Generate a scatterplot of force vs. distance\ndf %&gt;%\n  ggplot(aes(x = distance, y = force)) +\n  geom_point() +\n# Add a regression line with the fitted values\n  geom_line(aes(y = lr_pred), color = \"blue\", lwd = .75) +\n  ggtitle(\"Linear regression of force vs. distance\") +\n  theme_classic()"
+  },
+  {
+    "objectID": "01-FE.html#manually-engineering-a-feature",
+    "href": "01-FE.html#manually-engineering-a-feature",
+    "title": "1  Introducing Feature Engineering",
+    "section": "1.2 Manually engineering a feature",
+    "text": "1.2 Manually engineering a feature\nAfter doing some research with your team, you recall that the gravitational force of attraction between two bodies obeys Newton’s formula: \\[F = G\\frac{m_1m_2}{r^2}\\] You can’t use the formula directly because the masses are unknown, but you can fit a regression model of force as a function of inv_square_distance. The augmented dataset df you built in the previous exercise has been loaded for you."
+  },
+  {
+    "objectID": "01-FE.html#instructions-1",
+    "href": "01-FE.html#instructions-1",
+    "title": "1  Introducing Feature Engineering",
+    "section": "Instructions",
+    "text": "Instructions\n\nCreate a new variable inv_square_distance defined as the reciprocal of the squared distance and add it to the df data frame.\n\n*Build a simple regression model using lm() of force versus inv_square_distance and save it as lr_force_2.\n*Bind your predictions to df_inverse.\n\n# Create a new variable inv_square_distance\ndf_inverse &lt;- df %&gt;% mutate(inv_square_distance = 1/distance^2)\n\n# Build a simple regression model\nlr_force_2 &lt;- lm(force ~ inv_square_distance, data = df_inverse)\n\n# Bind your predictions to df_inverse\ndf_inverse &lt;- df_inverse %&gt;% bind_cols(lr2_pred = predict(lr_force_2))\n\ndf_inverse %&gt;% ggplot(aes(x = distance, y = force)) +\n  geom_point() +\n  geom_line(aes(y = lr2_pred), col = \"blue\", lwd = .75) +\n  ggtitle(\"Linear regression of force vs. inv_square_distance\") +\n  theme_classic()"
+  },
+  {
+    "objectID": "01-FE.html#creating-new-features-using-domain-knowledge---video",
+    "href": "01-FE.html#creating-new-features-using-domain-knowledge---video",
+    "title": "1  Introducing Feature Engineering",
+    "section": "Creating new features using domain knowledge - (video)",
+    "text": "Creating new features using domain knowledge - (video)"
   }
 ]

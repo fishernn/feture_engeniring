@@ -5,6 +5,8 @@ library(tidyverse)
 library(dplyr)
 library(knitr)
 library(modeldata)
+library(tidymodels)
+library(nycflights13)
 # Parallel Processing
 library(doMC)
 registerDoMC(cores = 20)
@@ -16,4 +18,142 @@ Raw data does not always come in its best shape for analysis. In this opening ch
 
 ## What is feature engineering? - (video) {-}
 <iframe src="https://drive.google.com/file/d/1MD0ZIfoAfKTWmtE9NHjuou-rU8z-kkV9/preview" width="640" height="480" allow="autoplay"></iframe>
+
+```{r include=FALSE, message = FALSE, warning = FALSE}
+set.seed(321)
+newton <- data.frame(distance = seq(1, 10, length = 120))
+newton <- newton |>
+  as_tibble() |>
+  mutate(force = 1/distance^2 + rnorm(120, 0, .01))
+```
+
+## A Tentative Model
+
+You are handed a data set with measures of the gravitational force between two bodies at different distances and are challenged to build a simple model to predict such force given a specific distance. Initially, you want to stick to simple linear regression. The data consist of 120 pairs of `distance` and `force`, and is loaded for you as `newton`.
+
+## Instructions {-}
+
+* Build a linear model for the `newton` data using the linear model from base `R` function and assign it to `lr_force`.
+
+* Create a new data frame `df` by binding the prediction values to the original `newton` data.
+
+* Generate a scatterplot of force versus distance using `ggplot()`.
+
+* Add a regression line to the scatterplot with the fitted values.
+
+```{r}
+# Build a linear model for the newton the data and assign it to lr_force
+lr_force <- lm(force ~ distance, data = newton)
+
+# Create a new data frame by binding the prediction values to the original data
+df <- newton %>% bind_cols(lr_pred = predict(lr_force))
+
+# Generate a scatterplot of force vs. distance
+df %>%
+  ggplot(aes(x = distance, y = force)) +
+  geom_point() +
+# Add a regression line with the fitted values
+  geom_line(aes(y = lr_pred), color = "blue", lwd = .75) +
+  ggtitle("Linear regression of force vs. distance") +
+  theme_classic()
+
+```
+
+## Manually engineering a feature
+
+After doing some research with your team, you recall that the gravitational force of attraction between two bodies obeys Newton's formula:
+$$F = G\frac{m_1m_2}{r^2}$$
+You can't use the formula directly because the masses are unknown, but you can fit a regression model of `force` as a function of `inv_square_distance`. The augmented dataset `df` you built in the previous exercise has been loaded for you.
+
+## Instructions {-}
+
+* Create a new variable `inv_square_distance` defined as the reciprocal of the squared distance and add it to the `df` data frame.
+
+*Build a simple regression model using `lm()` of force versus `inv_square_distance` and save it as `lr_force_2`.
+
+*Bind your predictions to `df_inverse`.
+
+```{r}
+# Create a new variable inv_square_distance
+df_inverse <- df %>% mutate(inv_square_distance = 1/distance^2)
+
+# Build a simple regression model
+lr_force_2 <- lm(force ~ inv_square_distance, data = df_inverse)
+
+# Bind your predictions to df_inverse
+df_inverse <- df_inverse %>% bind_cols(lr2_pred = predict(lr_force_2))
+
+df_inverse %>% ggplot(aes(x = distance, y = force)) +
+  geom_point() +
+  geom_line(aes(y = lr2_pred), col = "blue", lwd = .75) +
+  ggtitle("Linear regression of force vs. inv_square_distance") +
+  theme_classic()
+```
+
+## Creating new features using domain knowledge - (video) {-}
+
+<iframe src="https://drive.google.com/file/d/1IiSGekFTQfMhENySqyBvdvVXtu3cuTSl/preview" width="640" height="480" allow="autoplay"></iframe>
+
+## Setting up your data for analysis
+
+ou will look at a version of the nycflights13 dataset, loaded as flights. It contains information on `flights` departing from New York City. You are interested in predicting whether or not they will arrive late to their destination, but first, you need to set up the data for analysis.
+
+After discussing our model goals with a team of experts, you selected the following variables for your model: `flight`, `sched_dep_time`, `dep_delay`, `sched_arr_time`, `carrier`, `origin`, `dest`, `distance`, `date`, `arrival`.
+
+You will also `mutate()` the date using `as.Date()` and convert character type variables to factors.
+
+Lastly, you will split the data into `train` and `test` datasets.
+
+## Instructions {-}
+
+* Transform all character-type variables to factors.
+
+* Split the flights data into test and train sets.
+
+
+```{r}
+flights <- flights %>%
+  select(flight, sched_dep_time, dep_delay, sched_arr_time, carrier, origin, dest, distance, date, arrival) 
+```
+%>%
+# Tranform all character-type variables to factors
+  mutate(date = as.Date(date), across(where(is.character), as.factor))
+
+# Split the flights data into test and train sets
+set.seed(246)
+split <- flights %>% initial_split(prop = 3/4, strata = arrival)
+test <- testing(split)
+train <- training(split)
+
+test %>% select(arrival) %>% table() %>% prop.table()
+train %>% select(arrival) %>% table() %>% prop.table()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

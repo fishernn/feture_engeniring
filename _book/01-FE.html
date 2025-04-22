@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -62,6 +96,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -134,6 +170,11 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#what-is-feature-engineering---video" id="toc-what-is-feature-engineering---video" class="nav-link active" data-scroll-target="#what-is-feature-engineering---video">What is feature engineering? - (video)</a></li>
+  <li><a href="#a-tentative-model" id="toc-a-tentative-model" class="nav-link" data-scroll-target="#a-tentative-model"><span class="header-section-number">1.1</span> A Tentative Model</a></li>
+  <li><a href="#instructions" id="toc-instructions" class="nav-link" data-scroll-target="#instructions">Instructions</a></li>
+  <li><a href="#manually-engineering-a-feature" id="toc-manually-engineering-a-feature" class="nav-link" data-scroll-target="#manually-engineering-a-feature"><span class="header-section-number">1.2</span> Manually engineering a feature</a></li>
+  <li><a href="#instructions-1" id="toc-instructions-1" class="nav-link" data-scroll-target="#instructions-1">Instructions</a></li>
+  <li><a href="#creating-new-features-using-domain-knowledge---video" id="toc-creating-new-features-using-domain-knowledge---video" class="nav-link" data-scroll-target="#creating-new-features-using-domain-knowledge---video">Creating new features using domain knowledge - (video)</a></li>
   </ul>
 </nav>
     </div>
@@ -161,6 +202,82 @@ ul.task-list li input[type="checkbox"] {
 <section id="what-is-feature-engineering---video" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="what-is-feature-engineering---video">What is feature engineering? - (video)</h2>
 <iframe src="https://drive.google.com/file/d/1MD0ZIfoAfKTWmtE9NHjuou-rU8z-kkV9/preview" width="640" height="480" allow="autoplay">
+</iframe>
+</section>
+<section id="a-tentative-model" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="a-tentative-model"><span class="header-section-number">1.1</span> A Tentative Model</h2>
+<p>You are handed a data set with measures of the gravitational force between two bodies at different distances and are challenged to build a simple model to predict such force given a specific distance. Initially, you want to stick to simple linear regression. The data consist of 120 pairs of <code>distance</code> and <code>force</code>, and is loaded for you as <code>newton</code>.</p>
+</section>
+<section id="instructions" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions">Instructions</h2>
+<ul>
+<li><p>Build a linear model for the <code>newton</code> data using the linear model from base <code>R</code> function and assign it to <code>lr_force</code>.</p></li>
+<li><p>Create a new data frame <code>df</code> by binding the prediction values to the original <code>newton</code> data.</p></li>
+<li><p>Generate a scatterplot of force versus distance using <code>ggplot()</code>.</p></li>
+<li><p>Add a regression line to the scatterplot with the fitted values.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a linear model for the newton the data and assign it to lr_force</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>lr_force <span class="ot">&lt;-</span> <span class="fu">lm</span>(force <span class="sc">~</span> distance, <span class="at">data =</span> newton)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new data frame by binding the prediction values to the original data</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> newton <span class="sc">%&gt;%</span> <span class="fu">bind_cols</span>(<span class="at">lr_pred =</span> <span class="fu">predict</span>(lr_force))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a scatterplot of force vs. distance</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> distance, <span class="at">y =</span> force)) <span class="sc">+</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a regression line with the fitted values</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> lr_pred), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> .<span class="dv">75</span>) <span class="sc">+</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Linear regression of force vs. distance"</span>) <span class="sc">+</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01-FE_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="384"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="manually-engineering-a-feature" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="manually-engineering-a-feature"><span class="header-section-number">1.2</span> Manually engineering a feature</h2>
+<p>After doing some research with your team, you recall that the gravitational force of attraction between two bodies obeys Newton’s formula: <span class="math display">\[F = G\frac{m_1m_2}{r^2}\]</span> You can’t use the formula directly because the masses are unknown, but you can fit a regression model of <code>force</code> as a function of <code>inv_square_distance</code>. The augmented dataset <code>df</code> you built in the previous exercise has been loaded for you.</p>
+</section>
+<section id="instructions-1" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions-1">Instructions</h2>
+<ul>
+<li>Create a new variable <code>inv_square_distance</code> defined as the reciprocal of the squared distance and add it to the <code>df</code> data frame.</li>
+</ul>
+<p>*Build a simple regression model using <code>lm()</code> of force versus <code>inv_square_distance</code> and save it as <code>lr_force_2</code>.</p>
+<p>*Bind your predictions to <code>df_inverse</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new variable inv_square_distance</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df_inverse <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">inv_square_distance =</span> <span class="dv">1</span><span class="sc">/</span>distance<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a simple regression model</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>lr_force_2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(force <span class="sc">~</span> inv_square_distance, <span class="at">data =</span> df_inverse)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Bind your predictions to df_inverse</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>df_inverse <span class="ot">&lt;-</span> df_inverse <span class="sc">%&gt;%</span> <span class="fu">bind_cols</span>(<span class="at">lr2_pred =</span> <span class="fu">predict</span>(lr_force_2))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>df_inverse <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> distance, <span class="at">y =</span> force)) <span class="sc">+</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> lr2_pred), <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> .<span class="dv">75</span>) <span class="sc">+</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Linear regression of force vs. inv_square_distance"</span>) <span class="sc">+</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01-FE_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="384"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="creating-new-features-using-domain-knowledge---video" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="creating-new-features-using-domain-knowledge---video">Creating new features using domain knowledge - (video)</h2>
+<iframe src="https://drive.google.com/file/d/1IiSGekFTQfMhENySqyBvdvVXtu3cuTSl/preview" width="640" height="480" allow="autoplay">
 </iframe>
 
 
