@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Feture Engineering in R",
+    "section": "",
+    "text": "Preface\nThis material is from the DataCamp course Feature Engineering in R by Jorge Zazueta.\nCourse Description: In this course, you’ll learn about feature engineering, which is at the heart of many times of machine learning models. As the performance of any model is a direct consequence of the features it’s fed, feature engineering places domain knowledge at the center of the process. You’ll become acquainted with principles of sound feature engineering, helping to reduce the number of variables where possible, making learning algorithms run faster, improving interpretability, and preventing overfitting.\nYou will learn how to implement feature engineering techniques using the R tidymodels framework, emphasizing the recipe package that will allow you to create, extract, transform, and select the best features for your model.\nWhen faced with a new dataset, you will be able to identify and select relevant features and disregard non-informative ones to make your model run faster without sacrificing accuracy. You will also become comfortable applying transformations and creating new features to make your models more efficient, interpretable, and accurate\nReminder to self: each *.qmd file contains one and only one chapter, and a chapter is defined by the first-level heading #."
+  },
+  {
+    "objectID": "01-FE.html#what-is-feature-engineering---video",
+    "href": "01-FE.html#what-is-feature-engineering---video",
+    "title": "1  Introducing Feature Engineering",
+    "section": "What is feature engineering? - (video)",
+    "text": "What is feature engineering? - (video)"
+  }
+]

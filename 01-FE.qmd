@@ -1,0 +1,19 @@
+```{r include=FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, fig.align = "center", fig.width = 4, fig.height = 4, message = FALSE, warning = FALSE)
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(modeldata)
+# Parallel Processing
+library(doMC)
+registerDoMC(cores = 20)
+```
+
+# Introducing Feature Engineering
+
+Raw data does not always come in its best shape for analysis. In this opening chapter, you will get a first look at how to transform and create features that enhance your model's performance and interpretability.
+
+## What is feature engineering? - (video) {-}
+<iframe src="https://drive.google.com/file/d/1MD0ZIfoAfKTWmtE9NHjuou-rU8z-kkV9/preview" width="640" height="480" allow="autoplay"></iframe>
+

@@ -1,0 +1,31 @@
+project:
+  type: book
+
+book:
+  title: "[Feture Engineering in R](https://campus.datacamp.com/courses/feature-engineering-in-r/introducing-feature-engineering?ex=1)"
+  author: "[Natalie Fisher](your url here)"
+  date: last-modified
+  date-format: "[Last modified on] MMMM DD, YYYY HH:mm:ss zzz"
+  chapters:
+    - index.qmd
+    - 01-FE.qmd
+    - 02-FE.qmd
+    - references.qmd
+
+execute:
+  warning: false
+
+
+bibliography: packages.bib
+
+format:
+  html:
+    theme: pulse
+    fig-width: 5
+    fig-height: 4
+    fig-align: "center"
+    code-fold: false
+  pdf:
+    documentclass: scrreprt
+
+editor: source

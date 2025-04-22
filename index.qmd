@@ -1,0 +1,29 @@
+# Preface {.unnumbered}
+
+```{r setup, include=FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, fig.align = "center", fig.width = 4, fig.height = 4, message = FALSE, warning = FALSE)
+library(tidyverse)
+# Parallel Processing
+library(doMC)
+registerDoMC(cores = 16)
+```
+
+This material is from the [DataCamp](https://www.datacamp.com) course [Feature Engineering in R](https://app.datacamp.com/learn/courses/feature-engineering-in-r) by Jorge Zazueta.
+
+**Course Description:** In this course, you’ll learn about feature engineering, which is at the heart of many times of machine learning models. As the performance of any model is a direct consequence of the features it’s fed, feature engineering places domain knowledge at the center of the process. You’ll become acquainted with principles of sound feature engineering, helping to reduce the number of variables where possible, making learning algorithms run faster, improving interpretability, and preventing overfitting.
+
+You will learn how to implement feature engineering techniques using the R tidymodels framework, emphasizing the recipe package that will allow you to create, extract, transform, and select the best features for your model.
+
+When faced with a new dataset, you will be able to identify and select relevant features and disregard non-informative ones to make your model run faster without sacrificing accuracy. You will also become comfortable applying transformations and creating new features to make your models more efficient, interpretable, and accurate
+
+Reminder to self: each `*.qmd` file contains one and only one chapter, and a chapter is defined by the first-level heading `#`.
+
+```{r include=FALSE, eval = TRUE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown', 'caret', 
+  'caTools', 'ggplot2', "ranger", "randomForest", 'tidyverse',
+  'broom', 'dplyr', 'pwr', 'haven', 'simputation', 'cluster', 
+  'agricolae', 'naniar', 'mice', 'moderndive'), 
+  'packages.bib')
+```
