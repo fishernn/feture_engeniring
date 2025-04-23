@@ -236,65 +236,91 @@ lr_recipe <-
 lr_recipe
 ```
 
+## Fitting and assessing the model
 
+Now that you have addressed missing values and created dummy variables, it is time to assess your model's performance!
 
+The `attrition` dataset, along with the `test` and `train` splits, the `lr_recipe` and your declared `logistic_model()` are all loaded for you.
 
+## Instructions {-}
 
+* Bundle model and recipe in workflow.
 
+* Fit workflow to the train data.
 
+* Generate an augmented data frame for performance assessment.
 
+```{r}
+# Bundle model and recipe in workflow
+lr_workflow <- workflow() %>%
+  add_model(lr_model) %>%
+  add_recipe(lr_recipe)
 
+# Fit workflow to the train data
+lr_fit <- fit(lr_workflow, data = train)
 
+# Generate an augmented data frame for performance assessment
+lr_aug <- lr_fit %>% augment(test)
 
+lr_aug %>% roc_curve(truth = Attrition, .pred_No) %>% autoplot()
+bind_rows(lr_aug %>% roc_auc(truth = Attrition, .pred_No),          
+          lr_aug %>% accuracy(truth = Attrition, .pred_class))
+```
 
+## Predicting Hotel Bookings
 
+You just got a job at a hospitality research company, and your first task is to build a model that predicts whether or not a hotel stay will include children. To train your model, you will rely on a modified version of the hotel booking demands dataset by Antonio, Almeida, and Nunes (2019). You are restricting your data to the following features:
 
+```{r}
+hotel_rates <- hotel_rates %>%
+  select('adults', 
+              'children', 'meal',
+              'reserved_room_type', 
+              'customer_type', 
+              'arrival_date')
+```
 
+```{r}
+hotel <- initial_split(data = hotel_rates, prop = .80)
 
+train <- training(hotel)
+test <- testing(hotel)
 
+lr_model <- logistic_reg()
+```
 
+The data has been loaded for you as `hotels`, along with its corresponding `test` and `train` splits, and the model has been declared as `lr_model <- logistic_reg()`.
 
+You will assess model performance by accuracy and area under the *ROC* curve or *AUC*.
 
+##Instructions {-}
 
+* Generate "day of the week", "week" and "month" features.
 
+* Create dummy variables for all nominal predictors.
 
+```{r}
+lr_recipe <- 
+  recipe(children ~., data = train) %>%
+# Generate "day of the week", "week" and "month" features
 
+  step_date(arrival_date, features = c("dow", "week", "month")) %>%
 
+# Create dummy variables for all nominal predictors
+  step_dummy(all_nominal_predictors())
+```
 
+* Bundle your model and recipe in a `workflow()`.
 
+* Fit the workflow to the training data.
 
+```{r}
+# Bundle your model and recipe in a workflow
+lr_workflow <-workflow() %>% add_model(lr_model) %>% add_recipe(lr_recipe)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Fit the workflow to the training data
+lr_fit <-  lr_workflow %>% fit(data = train)
+lr_aug <- lr_fit %>% augment(test)
+bind_rows(roc_auc(lr_aug,truth = children, .pred_children),accuracy(lr_aug,truth = children, .pred_class))
+```
 
