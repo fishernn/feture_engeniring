@@ -113,12 +113,13 @@ Lastly, you will split the data into `train` and `test` datasets.
 
 ```{r}
 flights <- flights %>%
-  select(flight, sched_dep_time, dep_delay, sched_arr_time, carrier, origin, dest, distance, date, arrival) 
-```
-%>%
-# Tranform all character-type variables to factors
+  mutate(date = make_date(year, month, day)) %>%
+  rename(arrival = arr_time) %>%
+  select(flight, sched_dep_time, dep_delay, sched_arr_time, carrier, origin, dest, distance, date, arrival) %>%
   mutate(date = as.Date(date), across(where(is.character), as.factor))
+```
 
+```{r message = FALSE, warning = FALSE}
 # Split the flights data into test and train sets
 set.seed(246)
 split <- flights %>% initial_split(prop = 3/4, strata = arrival)
@@ -127,7 +128,7 @@ train <- training(split)
 
 test %>% select(arrival) %>% table() %>% prop.table()
 train %>% select(arrival) %>% table() %>% prop.table()
-
+```
 
 
 
