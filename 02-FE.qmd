@@ -1,5 +1,203 @@
----
-title: "02-FE"
-format: html
----
+```{r include=FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, fig.align = "center", fig.width = 4, fig.height = 4, message = FALSE, warning = FALSE)
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(modeldata)
+library(tidymodels)
+library(nycflights13)
+library(naniar)
+library(parsnip)
+# Parallel Processing
+library(doMC)
+registerDoMC(cores = 20)
+```
+
+# Transforming Features
+
+In this chapter, you’ll learn that, beyond manually transforming features, you can leverage tools from the tidyverse to engineer new variables programmatically. You’ll explore how this approach improves your models' reproducibility and is especially useful when handling datasets with many features.
+
+## Why transform existing features? -(video) {-}
+
+<iframe src="https://drive.google.com/file/d/1jgWrAqPuhgUsDQhWAC1ZlVQyAhZrnzK2/preview" width="640" height="480" allow="autoplay"></iframe>
+
+## Glancing at your data
+
+The dataset `attrition_num` has been loaded for you. Use the console to write code as necessary to answer the following questions: (1) How many observations are in the dataset? (2) How many numeric predictors? and (3) How many factor variables?
+
+* **There are 1,470 observations, 16 numeric predictors and one factor variable.**
+
+* There are 1,470 observations, 17 numeric predictors and one factor variable.
+
+* There are 1,490 observations, 0 numeric predictors and two factor variables.
+
+## Normalizing and log-transforming
+
+You are handed a dataset, `attrition_num` with numerical data about employees who left the company. Features include `Age`, `DistanceFromHome`, and `MonthlyRate`.
+
+You want to use this data to build a model that can predict if an employee is likely to stay, denoted by `Attrition`, a binary variable coded as a `factor`. In preparation for modeling, you want to reduce possible skewness and prevent some variables from outweighing others due to variations in scale.
+
+The `attrition_num` data and the `train` and `test` splits are loaded for you.
+
+## Instructions {-}
+
+* Normalize all numeric predictors.
+
+* Log-transform all numeric features, with an offset of one.
+
+```{r}
+attrition <- attrition %>% initial_split(prop = 3/4)
+
+train <- training(attrition)
+test <- testing(attrition)
+```
+
+```{r}
+lr_model <- logistic_reg()
+
+lr_recipe <- 
+  recipe(Attrition~., data = train) %>%
+
+# Normalize all numeric predictors
+  step_normalize(all_numeric_predictors()) %>%
+
+# Log-transform all numeric features, with an offset of one
+  step_log(all_nominal_predictors(), offset = 1)
+
+lr_workflow <- 
+  workflow() %>%
+  add_model(lr_model) %>%
+  add_recipe(lr_recipe)
+
+lr_workflow
+```
+
+## Fit and augment
+With your `lr_workflow` ready to go, you can fit it to the `test` data to make predictions.
+
+For model assessment, it is convenient to augment your fitted object by adding predictions and probabilities using `augment()`.
+
+## Instructions {-}
+
+* Fit the workflow to the train data.
+* Augment the lr_fit object using the test data to get it ready for assessment.
+
+```{r}
+# Fit the workflow to the train data
+lr_fit <- 
+  fit(lr_workflow, data = train)
+
+# Augment the lr_fit object
+lr_aug <-
+  augment(lr_fit, new_data = test)
+
+lr_aug
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

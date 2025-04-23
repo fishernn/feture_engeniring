@@ -8,6 +8,7 @@ library(modeldata)
 library(tidymodels)
 library(nycflights13)
 library(naniar)
+library(parsnip)
 # Parallel Processing
 library(doMC)
 registerDoMC(cores = 20)
