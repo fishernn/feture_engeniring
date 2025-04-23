@@ -177,6 +177,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#creating-new-features-using-domain-knowledge---video" id="toc-creating-new-features-using-domain-knowledge---video" class="nav-link" data-scroll-target="#creating-new-features-using-domain-knowledge---video">Creating new features using domain knowledge - (video)</a></li>
   <li><a href="#setting-up-your-data-for-analysis" id="toc-setting-up-your-data-for-analysis" class="nav-link" data-scroll-target="#setting-up-your-data-for-analysis"><span class="header-section-number">1.3</span> Setting up your data for analysis</a></li>
   <li><a href="#instructions-2" id="toc-instructions-2" class="nav-link" data-scroll-target="#instructions-2">Instructions</a></li>
+  <li><a href="#building-a-workflow" id="toc-building-a-workflow" class="nav-link" data-scroll-target="#building-a-workflow"><span class="header-section-number">1.4</span> Building a workflow</a></li>
+  <li><a href="#instructions-3" id="toc-instructions-3" class="nav-link" data-scroll-target="#instructions-3">Instructions</a></li>
+  <li><a href="#fit-lr_workflow-workflow-to-the-test-data" id="toc-fit-lr_workflow-workflow-to-the-test-data" class="nav-link" data-scroll-target="#fit-lr_workflow-workflow-to-the-test-data"><span class="header-section-number">2</span> Fit lr_workflow workflow to the test data</a></li>
+  <li><a href="#tidy-the-fitted-workflow" id="toc-tidy-the-fitted-workflow" class="nav-link" data-scroll-target="#tidy-the-fitted-workflow"><span class="header-section-number">3</span> Tidy the fitted workflow</a>
+  <ul class="collapse">
+  <li><a href="#increasing-the-information-content-of-raw-data--video" id="toc-increasing-the-information-content-of-raw-data--video" class="nav-link" data-scroll-target="#increasing-the-information-content-of-raw-data--video">Increasing the information content of raw data -(video)</a></li>
+  <li><a href="#identifying-missing-values" id="toc-identifying-missing-values" class="nav-link" data-scroll-target="#identifying-missing-values"><span class="header-section-number">3.1</span> Identifying missing values</a></li>
+  <li><a href="#instructions-4" id="toc-instructions-4" class="nav-link" data-scroll-target="#instructions-4">Instructions</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -1244,8 +1253,103 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 4.674341e-04 </code></pre>
 </div>
 </div>
+</section>
+<section id="building-a-workflow" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="building-a-workflow"><span class="header-section-number">1.4</span> Building a workflow</h2>
+<p>With your data ready for analysis, you will declare a <code>logistic_model()</code> to predict whether or not they will arrive late.</p>
+<p>You assign the role of “ID” to the <code>flight</code> variable to keep it as a reference for analysis and debugging. From the <code>date</code> variable, you will create new features to explicitly model the effect of holidays and represent factors as <code>dummy</code> variables.</p>
+<p>Bundling your <em>model</em> and <code>recipe()</code> together using <code>workflow()</code> will help ensure that subsequent fittings or predictions will implement consistent feature engineering steps.</p>
+</section>
+<section id="instructions-3" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions-3">Instructions</h2>
+<ul>
+<li><p>Assign an “ID” role to <code>flight</code>.</p></li>
+<li><p>Bundle the model and the recipe into a <code>workflow</code> object.</p></li>
+<li><p>Fit l<code>r_workflow</code> to the <code>test</code> data.</p></li>
+<li><p>Tidy the fitted <code>workflow</code>.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lr_model <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign an "ID" role to flight</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>lr_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(arrival <span class="sc">~</span>., <span class="at">data =</span> train) <span class="sc">%&gt;%</span> <span class="fu">update_role</span>(flight, <span class="at">new_role =</span> <span class="st">"ID"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_holiday</span>(date, <span class="at">holidays =</span> timeDate<span class="sc">::</span><span class="fu">listHolidays</span>(<span class="st">"US"</span>)) <span class="sc">%&gt;%</span> <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>())</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle the model and the recipe into a workflow object</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>lr_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lr_model) <span class="sc">%&gt;%</span> <span class="fu">add_recipe</span>(lr_recipe)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>lr_workflow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: logistic_reg()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+2 Recipe Steps
+
+• step_holiday()
+• step_dummy()
+
+── Model ───────────────────────────────────────────────────────────────────────
+Logistic Regression Model Specification (classification)
+
+Computational engine: glm </code></pre>
+</div>
+</div>
+</section>
+<section id="fit-lr_workflow-workflow-to-the-test-data" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Fit lr_workflow workflow to the test data</h1>
+<p>lr_fit &lt;- lr_workflow %&gt;% fit(data = test)</p>
+</section>
+<section id="tidy-the-fitted-workflow" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Tidy the fitted workflow</h1>
+<p>tidy(lr_fit)</p>
+<section id="increasing-the-information-content-of-raw-data--video" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="increasing-the-information-content-of-raw-data--video">Increasing the information content of raw data -(video)</h2>
+<iframe src="https://drive.google.com/file/d/1kAvYgXkvySZUFCRJmefdYDBAm2eafjnP/preview" width="640" height="480" allow="autoplay">
+</iframe>
+</section>
+<section id="identifying-missing-values" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="identifying-missing-values"><span class="header-section-number">3.1</span> Identifying missing values</h2>
+<p>Attrition is a critical issue for corporations, as losing an employee implies not only the cost of recruiting and training a new one, but constitutes a loss in tacit knowledge and culture that is hard to recover.</p>
+<p>The <code>attrition</code> dataset has information on employee attrition including <code>Age</code>, <code>WorkLifeBalance</code>, <code>DistanceFromHome</code>, <code>StockOptionLevel</code>, and 27 others. Before continuing with your analysis, you want to detect any missing variables.</p>
+<p>The package <code>naniar</code> and the <code>attrition</code> dataset are already loaded for you.</p>
+</section>
+<section id="instructions-4" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions-4">Instructions</h2>
+<ul>
+<li>Explore missing data visually to identify missing values on the <code>attrition</code> data.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore missing data on the attrition dataset</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(attrition)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01-FE_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="384"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Select the variables with missing values and visualize only those.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the variables with missing values and rerun the analysis on those variables.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>attrition <span class="sc">%&gt;%</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">"BusinessTravel"</span>, <span class="st">"DistanceFromHome"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>         <span class="st">"StockOptionLevel"</span>, <span class="st">"WorkLifeBalance"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">vis_miss</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01-FE_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="384"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -7,6 +7,7 @@ library(knitr)
 library(modeldata)
 library(tidymodels)
 library(nycflights13)
+library(naniar)
 # Parallel Processing
 library(doMC)
 registerDoMC(cores = 20)
@@ -117,9 +118,7 @@ flights <- flights %>%
   rename(arrival = arr_time) %>%
   select(flight, sched_dep_time, dep_delay, sched_arr_time, carrier, origin, dest, distance, date, arrival) %>%
   mutate(date = as.Date(date), across(where(is.character), as.factor))
-```
 
-```{r message = FALSE, warning = FALSE}
 # Split the flights data into test and train sets
 set.seed(246)
 split <- flights %>% initial_split(prop = 3/4, strata = arrival)
@@ -129,6 +128,147 @@ train <- training(split)
 test %>% select(arrival) %>% table() %>% prop.table()
 train %>% select(arrival) %>% table() %>% prop.table()
 ```
+
+## Building a workflow
+
+With your data ready for analysis, you will declare a `logistic_model()` to predict whether or not they will arrive late.
+
+You assign the role of "ID" to the `flight` variable to keep it as a reference for analysis and debugging. From the `date` variable, you will create new features to explicitly model the effect of holidays and represent factors as `dummy` variables.
+
+Bundling your *model* and `recipe()` together using `workflow()` will help ensure that subsequent fittings or predictions will implement consistent feature engineering steps.
+
+## Instructions {-}
+
+* Assign an "ID" role to `flight`.
+
+* Bundle the model and the recipe into a `workflow` object.
+
+* Fit l`r_workflow` to the `test` data.
+
+* Tidy the fitted `workflow`.
+
+```{r}
+lr_model <- logistic_reg()
+
+# Assign an "ID" role to flight
+lr_recipe <- recipe(arrival ~., data = train) %>% update_role(flight, new_role = "ID") %>%
+  step_holiday(date, holidays = timeDate::listHolidays("US")) %>% step_dummy(all_nominal_predictors())
+
+# Bundle the model and the recipe into a workflow object
+lr_workflow <- workflow() %>% add_model(lr_model) %>% add_recipe(lr_recipe)
+lr_workflow
+
+
+# Fit lr_workflow workflow to the test data  
+lr_fit <- lr_workflow %>% fit(data = test)
+
+# Tidy the fitted workflow  
+tidy(lr_fit)
+```
+
+## Increasing the information content of raw data -(video) {-}
+
+<iframe src="https://drive.google.com/file/d/1kAvYgXkvySZUFCRJmefdYDBAm2eafjnP/preview" width="640" height="480" allow="autoplay"></iframe>
+
+## Identifying missing values
+
+Attrition is a critical issue for corporations, as losing an employee implies not only the cost of recruiting and training a new one, but constitutes a loss in tacit knowledge and culture that is hard to recover.
+
+The `attrition` dataset has information on employee attrition including `Age`, `WorkLifeBalance`, `DistanceFromHome`, `StockOptionLevel`, and 27 others. Before continuing with your analysis, you want to detect any missing variables.
+
+The package `naniar` and the `attrition` dataset are already loaded for you.
+
+## Instructions {-}
+
+* Explore missing data visually to identify missing values on the `attrition` data.
+
+
+```{r}
+# Explore missing data on the attrition dataset
+vis_miss(attrition)
+```
+
+* Select the variables with missing values and visualize only those.
+
+```{r}
+# Select the variables with missing values and rerun the analysis on those variables.
+attrition %>% 
+  select("BusinessTravel", "DistanceFromHome",
+         "StockOptionLevel", "WorkLifeBalance") %>%
+  vis_miss()
+```
+
+
+```{r}
+attrition <- attrition %>% initial_split(prop = 3/4)
+
+train <- training(attrition)
+test <- testing(attrition)
+```
+
+## Imputing missing values and creating dummy variables
+
+After detecting missing values in the attrition `dataset` and determining that they are missing completely at random (MCAR), you decide to use K Nearest Neighbors (KNN) imputation. While configuring your feature engineering `recipe`, you decide to create dummy variables for all your nominal variables and update the role of the `...1` variable to "ID" so you can keep it in the dataset for reference, without affecting your model.
+
+## Instructions {-}
+
+* Update the role of `...1` to "ID".
+
+* Impute values to all predictors where data are missing.
+
+* Create dummy variables for all nominal predictors.
+
+```{r}
+r_model <- logistic_reg()
+
+lr_recipe <- 
+  recipe(Attrition ~., data = train) %>%
+
+# Update the role of "...1" to "ID"
+  update_role(...1, new_role = "ID" ) %>%
+
+# Impute values to all predictors where data are missing
+  step_impute_knn(all_nominal_predictors()) %>%
+
+# Create dummy variables for all nominal predictors
+  step_dummy(all_nominal_predictors())
+
+lr_recipe
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
