@@ -95,97 +95,249 @@ lr_aug <-
 lr_aug
 ```
 
+## Customize your model assessment
 
+Creating custom assessment functions is quite convenient when iterating through various models. The `metric_set()` function from the yardstickpackage can help you to achieve this.
 
+Define a function that returns `roc_auc`, `accuracy`, `sens(sensitivity)` and specificity `spec`(specificity) and use it to assess your model.
 
+The augmented data frame `lr_augis` already loaded and ready to go.
 
+## Instructions {-}
 
+* Define a custom assessment function that returns `roc_auc`, `accuracy`, `sens`, and `spec`.
 
+* Assess your model using your new function on `lr_augto` obtain the metrics you just chose.
 
+```{r}
+# Define a custom assessment function 
+class_evaluate <- metric_set(roc_auc, accuracy, sens, spec)
 
+# Assess your model using your new function
+class_evaluate(lr_aug, truth = Attrition,
+               estimate = .pred_class,
+               .pred_No)
+```
 
+## Common feature transformations -(video) {-}
 
+<iframe src="https://drive.google.com/file/d/1dQnDYOXgQz0FBDFfTnrPscbOfSowGp3z/preview" width="640" height="480" allow="autoplay"></iframe>
 
 
+## Common transformations
 
+This transformation has no restrictions on the values it can take.
 
+* Box-Cox
 
+* **Yeo-Johnson**
 
+* Both Yeo-Johnson and Box-Cox can take any values
 
+* Neither. Both accept only positive values
 
+## Plain recipe
 
+Using the `attrition_num` dataset with all numerical data about employees who have left the company, you want to build a model that can predict if an employee is likely to stay, using `Attrition`, a binary variable coded as a `factor`. To get started, you will define a plain recipe that does nothing other than define the model formula and the training data.
 
+The `attrition_numdata`, the logistic regression `lr_model`, the user-defined `class-evaluate()` function, and the trainand test splits are loaded for you.
 
+## Instructions {-}
 
+* Create a plain recipe defining only the model formula.
 
+```{r}
+# Create a plain recipe defining only the model formula
+lr_recipe_plain <- 
+  recipe(Attrition ~., data = train)
 
+lr_workflow_plain <- workflow() %>%
+  add_model(lr_model) %>%
+  add_recipe(lr_recipe_plain)
+lr_fit_plain <- lr_workflow_plain %>%
+  fit(train)
+lr_aug_plain <-
+  lr_fit_plain %>% augment(test)
+lr_aug_plain %>% class_evaluate(truth = Attrition,
+                 estimate = .pred_class,.pred_No)
+```
 
+## Box-Cox transformation
 
+Using the `attrition_num` dataset with all numerical data about employees who have left the company, you want to build a model that can predict if an employee is likely to stay, using Attrition, a binary variable coded as a factor. To get the features to behave nearly normally, you will create a recipe that implements the Box-Cox transformation.
 
+The `attrition_numdata`, the logistic regression `lr_model`, the user-defined `class-evaluate()` function, and the `train` and `test` splits are loaded for you.
 
+## Instructions {-}
 
+* Create a recipe that uses Box-Cox to transform all numeric features, including the target.
 
 
+```{r}
+# Create a recipe that uses Box-Cox to transform all numeric features
+lr_recipe_BC <- 
+  recipe(Attrition ~., data = train) %>%
+ step_BoxCox(all_numeric())
 
+lr_workflow_BC <- workflow() %>%
+  add_model(lr_model) %>%
+  add_recipe(lr_recipe_BC)
+lr_fit_BC <- lr_workflow_BC %>%
+  fit(train)
+lr_aug_BC <-
+  lr_fit_BC %>% augment(test)
+lr_aug_BC %>% class_evaluate(truth = Attrition,
+                 estimate = .pred_class,.pred_No)
+```
 
+## Yeo-Johnson transformation
 
+Using the `attrition_num` dataset with all numerical data about employees who have left the company, you want to build a model that can predict if an employee is likely to stay, using `Attrition`, a binary variable coded as a `factor`. To get the features to behave nearly normally, you will create a recipe that implements the Yeo-Johnson transformation.
 
+The `attrition_numdata`, the logistic regression `lr_model`, the user-defined `class-evaluate()` function, and the `train` and `test` splits are loaded for you.
 
+## Instructions {-}
 
+* Create a recipe that uses Yeo-Johnson to transform all numeric features, including the target.
 
+```{r}
+# Create a recipe that uses Yeo-Johnson to transform all numeric features
+lr_recipe_YJ <- 
+  recipe(Attrition ~., data = train) %>%
+  step_YeoJohnson(all_numeric())
 
+lr_workflow_YJ <- workflow() %>%
+  add_model(lr_model) %>%
+  add_recipe(lr_recipe_YJ)
+lr_fit_YJ <- lr_workflow_YJ %>%
+  fit(train)
+lr_aug_YJ <-
+  lr_fit_YJ %>% augment(test)
+lr_aug_YJ %>% class_evaluate(truth = Attrition,
+                 estimate = .pred_class,.pred_No)
+```
 
+## Advanced transformations -(video) {-}
 
+<iframe src="https://drive.google.com/file/d/125-a0VWaoVsbScvmOjU4RuKYsx2VJmtq/preview" width="640" height="480" allow="autoplay"></iframe>
 
+## Baseline
 
+Continuing with the `attrition_num` dataset, you will create a baseline with a plain recipe to assess the effects of additional feature engineering steps. The `attrition_num` data, the logistic regression `lr_model`, the user-defined `class-evaluate()` function, and the `train` and `test` splits have already been loaded for you.
 
+## Instructions {-}
 
+* Bundle the model and recipe into a workflow.
 
+* Augment the fitted workflow to get it ready for assessment.
 
+```{r}
+lr_recipe_plain <- recipe(Attrition ~., data = train)
 
+# Bundle the model and recipe
+lr_workflow_plain <- workflow() %>%
+  add_model(lr_model) %>%
+  add_recipe(lr_recipe_plain)
+lr_fit_plain <- lr_workflow_plain %>%
+  fit(train)
 
+# Augment the fit workflow
+lr_aug_plain <- lr_fit_plain %>%
+  augment(test)
+lr_aug_plain %>%
+  class_evaluate(truth = Attrition,estimate = .pred_class,
+                 .pred_No)
+```
 
+## `step_poly()`
 
+Now that you have a baseline, you can compare your model's performance if you add a polynomial transformation to all numerical values.
 
+The `attrition_num` data, the logistic regression `lr_model`, the user-defined `class-evaluate()` function, and the `train` and `test` splits have already been loaded for you.
 
+## Instructions {-}
 
 
+* Add a polynomial transformation to all numeric predictors.
 
+* Fit workflow to the `train` data.
 
+```{r}
+lr_recipe_poly <- 
+  recipe(Attrition ~., data = train) %>%
 
+# Add a polynomial transformation to all numeric predictors
+  step_poly(all_numeric_predictors())
 
+lr_workflow_poly <- workflow() %>%
+  add_model(lr_model) %>%
+  add_recipe(lr_recipe_poly)
 
+# Fit workflow to the train data
+lr_fit_poly <- lr_workflow_poly %>% fit(train)
+lr_aug_poly <- lr_fit_poly %>% augment(test)
+lr_aug_poly %>% class_evaluate(truth = Attrition, estimate = .pred_class,.pred_No)
+```
 
+## `step_percentile()`
 
+How would applying a percentile transformation to your numeric variables affect model performance? Try it!
 
+The `attrition_num` data, the logistic regression `lr_model`, the user-defined `class-evaluate()` function, and the `train` and `test` splits have already been loaded for you.
 
+## Instructions {-}
 
+* Apply a percentile transformation to all numeric predictors.
 
+```{r}
+# Add percentile tansformation to all numeric predictors
+lr_recipe_perc <- 
+  recipe(Attrition ~., data = train) %>%
+  step_percentile(all_numeric_predictors())
+lr_workflow_perc <-
+  workflow() %>%
+  add_model(lr_model) %>%
+  add_recipe(lr_recipe_perc)
+lr_fit_perc <- lr_workflow_perc %>% fit(train)
+lr_aug_perc <- lr_fit_perc %>% augment(test)
+lr_aug_perc %>% class_evaluate(truth = Attrition,
+                 estimate = .pred_class,.pred_No)
+```
 
+## Who's staying?
 
+It's time to practice combining several transformations to the `attrition_num` data. First, normalize or near-normalize numeric variables by applying a Yeo-Johnson transformation. Next, transform numeric predictors to percentiles, create dummy variables, and eliminate features with near zero variance.
 
+## Instructions {-}
 
+* Apply a Yeo-Johnson transformation to all numeric variables.
 
+* Transform all numeric predictors into percentiles.
 
+* Create dummy variables for all nominal predictors.
 
+```{r}
+lr_recipe <- recipe(Attrition ~., data = train) %>%
 
+# Apply a Yeo-Johnson transformation to all numeric variables
+  step_YeoJohnson(all_numeric()) %>%
 
+# Transform all numeric predictors into percentiles
+ step_percentile(all_numeric_predictors()) %>%
 
+# Create dummy variables for all nominal predictors
+  step_dummy(all_nominal_predictors())
 
+lr_workflow <- workflow() %>% add_model(lr_model) %>% add_recipe(lr_recipe)
+lr_fit <- lr_workflow %>% fit(train)
+lr_aug <- lr_fit %>% augment(test)
+lr_aug %>% class_evaluate(truth = Attrition, estimate = .pred_class,.pred_No)
+```
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+::: callout-note
+ALLLLLL DONE
+:::
 
 
 
