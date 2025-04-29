@@ -24,6 +24,13 @@ In this chapter, you’ll learn that, beyond manually transforming features, you
 
 ## Glancing at your data
 
+```{r}
+#| code-fold: true
+library(modeldata)
+attrition_num <- attrition %>%
+  select(Attrition, Age, DailyRate, DistanceFromHome, HourlyRate, JobLevel, MonthlyIncome, MonthlyRate, NumCompaniesWorked, PercentSalaryHike, StockOptionLevel, TotalWorkingYears, TrainingTimesLastYear, YearsAtCompany, YearsInCurrentRole, YearsSinceLastPromotion, YearsWithCurrManager)
+```
+
 The dataset `attrition_num` has been loaded for you. Use the console to write code as necessary to answer the following questions: (1) How many observations are in the dataset? (2) How many numeric predictors? and (3) How many factor variables?
 
 * **There are 1,470 observations, 16 numeric predictors and one factor variable.**
@@ -47,10 +54,10 @@ The `attrition_num` data and the `train` and `test` splits are loaded for you.
 * Log-transform all numeric features, with an offset of one.
 
 ```{r}
-attrition <- attrition %>% initial_split(prop = 3/4)
+attrition_split <- initial_split(attrition_num, prop = 3/4, strata = Attrition)
 
-train <- training(attrition)
-test <- testing(attrition)
+train <- training(attrition_split)
+test <- testing(attrition_split)
 ```
 
 ```{r}

@@ -112,14 +112,25 @@ Lastly, you will split the data into `train` and `test` datasets.
 
 * Split the flights data into test and train sets.
 
+```{r}
+set.seed(24601)
+flights <- flights %>%
+  slice_sample(n= 18182) 
+#str(flights)
+```
+
 
 ```{r}
+#| code-fold: true
 flights <- flights %>%
   mutate(date = make_date(year, month, day)) %>%
-  rename(arrival = arr_time) %>%
+  mutate(arr = sched_arr_time - arr_time) %>%
+  mutate(arrival = ifelse(arr <= -50, "late", "on-time")) %>%
   select(flight, sched_dep_time, dep_delay, sched_arr_time, carrier, origin, dest, distance, date, arrival) %>%
   mutate(date = as.Date(date), across(where(is.character), as.factor))
+```
 
+```{r}
 # Split the flights data into test and train sets
 set.seed(246)
 split <- flights %>% initial_split(prop = 3/4, strata = arrival)
@@ -149,7 +160,9 @@ Bundling your *model* and `recipe()` together using `workflow()` will help ensur
 * Tidy the fitted `workflow`.
 
 ```{r}
-lr_model <- logistic_reg()
+lr_model <- logistic_reg() %>%
+  set_engine("glm") %>%
+  set_mode("classification")
 
 # Assign an "ID" role to flight
 lr_recipe <- recipe(arrival ~., data = train) %>% update_role(flight, new_role = "ID") %>%
@@ -179,6 +192,27 @@ The `attrition` dataset has information on employee attrition including `Age`, `
 
 The package `naniar` and the `attrition` dataset are already loaded for you.
 
+```{r}
+#| code:fold: true
+
+library(naniar)
+set.seed(345)
+attrition <- attrition %>%
+  mutate(BusinessTravel = replace(BusinessTravel, sample(row_number(), size = ceiling(.18*n()), replace = FALSE), NA), 
+                                  DistanceFromHome = replace(DistanceFromHome, sample(row_number(), size = ceiling(.10*n()), replace = FALSE), NA),
+                                  StockOptionLevel = replace(StockOptionLevel, sample(row_number(), size = ceiling(.15*n()), replace = FALSE), NA),
+                                  WorkLifeBalance = replace(WorkLifeBalance, sample(row_number(), size = ceiling(.10*n()), replace = FALSE), NA))
+
+attrition$...1 <- 1:1470
+attrition <- attrition %>%
+  relocate(...1, .before = Age)
+
+set.seed(89)
+attrition_split <- initial_split(attrition, prop = .75, strata = Attrition)
+train <- training(attrition_split)
+test <- testing(attrition_split)
+```
+
 ## Instructions {-}
 
 * Explore missing data visually to identify missing values on the `attrition` data.
@@ -200,12 +234,7 @@ attrition %>%
 ```
 
 
-```{r}
-attrition <- attrition %>% initial_split(prop = 3/4)
 
-train <- training(attrition)
-test <- testing(attrition)
-```
 
 ## Imputing missing values and creating dummy variables
 
@@ -272,9 +301,9 @@ bind_rows(lr_aug %>% roc_auc(truth = Attrition, .pred_No),
 
 You just got a job at a hospitality research company, and your first task is to build a model that predicts whether or not a hotel stay will include children. To train your model, you will rely on a modified version of the hotel booking demands dataset by Antonio, Almeida, and Nunes (2019). You are restricting your data to the following features:
 
+
 ```{r}
-hotel_rates <- hotel_rates %>%
-  select('adults', 
+features <- c('adults', 
               'children', 'meal',
               'reserved_room_type', 
               'customer_type', 
@@ -282,10 +311,37 @@ hotel_rates <- hotel_rates %>%
 ```
 
 ```{r}
-hotel <- initial_split(data = hotel_rates, prop = .80)
+#| code-fold: true
 
-train <- training(hotel)
-test <- testing(hotel)
+library(lubridate)
+hotel_booking <- read_csv("./DATA/hotel_booking.csv")
+hotel_booking <- hotel_booking %>%
+  mutate(month_no = match(arrival_date_month, month.name)) %>%
+  mutate(arrival_date = make_date(arrival_date_year, month_no, arrival_date_day_of_month)) %>%
+  mutate(children = ifelse( children == 0, "none", "children"))
+
+set.seed(90)
+hotel_booking %>%
+  sample_n(size = 50000) %>%
+  select("hotel", 'adults', 
+              'children', 'meal',
+              'reserved_room_type', 
+              'customer_type', 
+              'arrival_date') %>%
+  mutate_if(is.character, as.factor) -> hotelsOL
+
+hotelsOL$...1 <- 1:50000
+hotelsOL <- hotelsOL %>%
+  relocate(...1, .before = hotel)
+```
+
+
+```{r}
+set.seed(4)
+hotel_split <- initial_split(hotelsOL, prop = .75, strata = hotel)
+
+train <- training(hotel_split)
+test <- testing(hotel_split)
 
 lr_model <- logistic_reg()
 ```
@@ -320,8 +376,13 @@ lr_recipe <-
 lr_workflow <-workflow() %>% add_model(lr_model) %>% add_recipe(lr_recipe)
 
 # Fit the workflow to the training data
-lr_fit <-  lr_workflow %>% fit(data = train)
-lr_aug <- lr_fit %>% augment(test)
+
+lr_fit <-  lr_workflow %>% 
+  fit(data = train)
+lr_aug <- lr_fit %>% 
+  augment(test)
+
 bind_rows(roc_auc(lr_aug,truth = children, .pred_children),accuracy(lr_aug,truth = children, .pred_class))
 ```
+
 

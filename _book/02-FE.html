@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Feture Engineering in R - 3&nbsp; 02-FE</title>
+<title>Feture Engineering in R - 2&nbsp; Transforming Features</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -74,7 +108,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-FE.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">02-FE</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-FE.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Parallel Processing</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -102,25 +136,25 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">index</span></span></a>
+ <span class="menu-text">Preface</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./01-FE.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">01-FE</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Parallel Processing</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./02-FE.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">02-FE</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Parallel Processing</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">references</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">references</span></span></a>
   </div>
 </li>
     </ul>
@@ -129,14 +163,44 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#why-transform-existing-features--video" id="toc-why-transform-existing-features--video" class="nav-link active" data-scroll-target="#why-transform-existing-features--video">Why transform existing features? -(video)</a></li>
+  <li><a href="#glancing-at-your-data" id="toc-glancing-at-your-data" class="nav-link" data-scroll-target="#glancing-at-your-data"><span class="header-section-number">2.1</span> Glancing at your data</a></li>
+  <li><a href="#normalizing-and-log-transforming" id="toc-normalizing-and-log-transforming" class="nav-link" data-scroll-target="#normalizing-and-log-transforming"><span class="header-section-number">2.2</span> Normalizing and log-transforming</a></li>
+  <li><a href="#instructions" id="toc-instructions" class="nav-link" data-scroll-target="#instructions">Instructions</a></li>
+  <li><a href="#fit-and-augment" id="toc-fit-and-augment" class="nav-link" data-scroll-target="#fit-and-augment"><span class="header-section-number">2.3</span> Fit and augment</a></li>
+  <li><a href="#instructions-1" id="toc-instructions-1" class="nav-link" data-scroll-target="#instructions-1">Instructions</a></li>
+  <li><a href="#customize-your-model-assessment" id="toc-customize-your-model-assessment" class="nav-link" data-scroll-target="#customize-your-model-assessment"><span class="header-section-number">2.4</span> Customize your model assessment</a></li>
+  <li><a href="#instructions-2" id="toc-instructions-2" class="nav-link" data-scroll-target="#instructions-2">Instructions</a></li>
+  <li><a href="#common-feature-transformations--video" id="toc-common-feature-transformations--video" class="nav-link" data-scroll-target="#common-feature-transformations--video">Common feature transformations -(video)</a></li>
+  <li><a href="#common-transformations" id="toc-common-transformations" class="nav-link" data-scroll-target="#common-transformations"><span class="header-section-number">2.5</span> Common transformations</a></li>
+  <li><a href="#plain-recipe" id="toc-plain-recipe" class="nav-link" data-scroll-target="#plain-recipe"><span class="header-section-number">2.6</span> Plain recipe</a></li>
+  <li><a href="#instructions-3" id="toc-instructions-3" class="nav-link" data-scroll-target="#instructions-3">Instructions</a></li>
+  <li><a href="#box-cox-transformation" id="toc-box-cox-transformation" class="nav-link" data-scroll-target="#box-cox-transformation"><span class="header-section-number">2.7</span> Box-Cox transformation</a></li>
+  <li><a href="#instructions-4" id="toc-instructions-4" class="nav-link" data-scroll-target="#instructions-4">Instructions</a></li>
+  <li><a href="#yeo-johnson-transformation" id="toc-yeo-johnson-transformation" class="nav-link" data-scroll-target="#yeo-johnson-transformation"><span class="header-section-number">2.8</span> Yeo-Johnson transformation</a></li>
+  <li><a href="#instructions-5" id="toc-instructions-5" class="nav-link" data-scroll-target="#instructions-5">Instructions</a></li>
+  <li><a href="#advanced-transformations--video" id="toc-advanced-transformations--video" class="nav-link" data-scroll-target="#advanced-transformations--video">Advanced transformations -(video)</a></li>
+  <li><a href="#baseline" id="toc-baseline" class="nav-link" data-scroll-target="#baseline"><span class="header-section-number">2.9</span> Baseline</a></li>
+  <li><a href="#instructions-6" id="toc-instructions-6" class="nav-link" data-scroll-target="#instructions-6">Instructions</a></li>
+  <li><a href="#step_poly" id="toc-step_poly" class="nav-link" data-scroll-target="#step_poly"><span class="header-section-number">2.10</span> <code>step_poly()</code></a></li>
+  <li><a href="#instructions-7" id="toc-instructions-7" class="nav-link" data-scroll-target="#instructions-7">Instructions</a></li>
+  <li><a href="#step_percentile" id="toc-step_percentile" class="nav-link" data-scroll-target="#step_percentile"><span class="header-section-number">2.11</span> <code>step_percentile()</code></a></li>
+  <li><a href="#instructions-8" id="toc-instructions-8" class="nav-link" data-scroll-target="#instructions-8">Instructions</a></li>
+  <li><a href="#whos-staying" id="toc-whos-staying" class="nav-link" data-scroll-target="#whos-staying"><span class="header-section-number">2.12</span> Who’s staying?</a></li>
+  <li><a href="#instructions-9" id="toc-instructions-9" class="nav-link" data-scroll-target="#instructions-9">Instructions</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">02-FE</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Transforming Features</span></h1>
 </div>
 
 
@@ -151,8 +215,447 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<p>In this chapter, you’ll learn that, beyond manually transforming features, you can leverage tools from the tidyverse to engineer new variables programmatically. You’ll explore how this approach improves your models’ reproducibility and is especially useful when handling datasets with many features.</p>
+<section id="why-transform-existing-features--video" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="why-transform-existing-features--video">Why transform existing features? -(video)</h2>
+<iframe src="https://drive.google.com/file/d/1jgWrAqPuhgUsDQhWAC1ZlVQyAhZrnzK2/preview" width="640" height="480" allow="autoplay">
+</iframe>
+</section>
+<section id="glancing-at-your-data" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="glancing-at-your-data"><span class="header-section-number">2.1</span> Glancing at your data</h2>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>attrition_num <span class="ot">&lt;-</span> attrition <span class="sc">%&gt;%</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Attrition, Age, DailyRate, DistanceFromHome, HourlyRate, JobLevel, MonthlyIncome, MonthlyRate, NumCompaniesWorked, PercentSalaryHike, StockOptionLevel, TotalWorkingYears, TrainingTimesLastYear, YearsAtCompany, YearsInCurrentRole, YearsSinceLastPromotion, YearsWithCurrManager)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The dataset <code>attrition_num</code> has been loaded for you. Use the console to write code as necessary to answer the following questions: (1) How many observations are in the dataset? (2) How many numeric predictors? and (3) How many factor variables?</p>
+<ul>
+<li><p><strong>There are 1,470 observations, 16 numeric predictors and one factor variable.</strong></p></li>
+<li><p>There are 1,470 observations, 17 numeric predictors and one factor variable.</p></li>
+<li><p>There are 1,490 observations, 0 numeric predictors and two factor variables.</p></li>
+</ul>
+</section>
+<section id="normalizing-and-log-transforming" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="normalizing-and-log-transforming"><span class="header-section-number">2.2</span> Normalizing and log-transforming</h2>
+<p>You are handed a dataset, <code>attrition_num</code> with numerical data about employees who left the company. Features include <code>Age</code>, <code>DistanceFromHome</code>, and <code>MonthlyRate</code>.</p>
+<p>You want to use this data to build a model that can predict if an employee is likely to stay, denoted by <code>Attrition</code>, a binary variable coded as a <code>factor</code>. In preparation for modeling, you want to reduce possible skewness and prevent some variables from outweighing others due to variations in scale.</p>
+<p>The <code>attrition_num</code> data and the <code>train</code> and <code>test</code> splits are loaded for you.</p>
+</section>
+<section id="instructions" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions">Instructions</h2>
+<ul>
+<li><p>Normalize all numeric predictors.</p></li>
+<li><p>Log-transform all numeric features, with an offset of one.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>attrition_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(attrition_num, <span class="at">prop =</span> <span class="dv">3</span><span class="sc">/</span><span class="dv">4</span>, <span class="at">strata =</span> Attrition)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">training</span>(attrition_split)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">testing</span>(attrition_split)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lr_model <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>lr_recipe <span class="ot">&lt;-</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(Attrition<span class="sc">~</span>., <span class="at">data =</span> train) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize all numeric predictors</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Log-transform all numeric features, with an offset of one</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_log</span>(<span class="fu">all_nominal_predictors</span>(), <span class="at">offset =</span> <span class="dv">1</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>lr_workflow <span class="ot">&lt;-</span> </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(lr_model) <span class="sc">%&gt;%</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(lr_recipe)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>lr_workflow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: logistic_reg()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+2 Recipe Steps
+
+• step_normalize()
+• step_log()
+
+── Model ───────────────────────────────────────────────────────────────────────
+Logistic Regression Model Specification (classification)
+
+Computational engine: glm </code></pre>
+</div>
+</div>
+</section>
+<section id="fit-and-augment" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="fit-and-augment"><span class="header-section-number">2.3</span> Fit and augment</h2>
+<p>With your <code>lr_workflow</code> ready to go, you can fit it to the <code>test</code> data to make predictions.</p>
+<p>For model assessment, it is convenient to augment your fitted object by adding predictions and probabilities using <code>augment()</code>.</p>
+</section>
+<section id="instructions-1" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions-1">Instructions</h2>
+<ul>
+<li>Fit the workflow to the train data.</li>
+<li>Augment the lr_fit object using the test data to get it ready for assessment.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the workflow to the train data</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>lr_fit <span class="ot">&lt;-</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(lr_workflow, <span class="at">data =</span> train)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Augment the lr_fit object</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>lr_aug <span class="ot">&lt;-</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">augment</span>(lr_fit, <span class="at">new_data =</span> test)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>lr_aug</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 369 × 20
+   .pred_class .pred_No .pred_Yes Attrition   Age DailyRate DistanceFromHome
+ * &lt;fct&gt;          &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;     &lt;int&gt;     &lt;int&gt;            &lt;int&gt;
+ 1 No             0.795    0.205  No           33      1392                3
+ 2 No             0.665    0.335  No           27       591                2
+ 3 No             0.844    0.156  No           29       153               15
+ 4 No             0.546    0.454  No           31       670               26
+ 5 No             0.940    0.0596 No           32       334                5
+ 6 No             0.787    0.213  No           22      1123               16
+ 7 No             0.876    0.124  No           24       673               11
+ 8 No             0.950    0.0502 No           34       419                7
+ 9 No             0.675    0.325  Yes          32      1125               16
+10 No             0.963    0.0368 No           44       477                7
+# ℹ 359 more rows
+# ℹ 13 more variables: HourlyRate &lt;int&gt;, JobLevel &lt;int&gt;, MonthlyIncome &lt;int&gt;,
+#   MonthlyRate &lt;int&gt;, NumCompaniesWorked &lt;int&gt;, PercentSalaryHike &lt;int&gt;,
+#   StockOptionLevel &lt;int&gt;, TotalWorkingYears &lt;int&gt;,
+#   TrainingTimesLastYear &lt;int&gt;, YearsAtCompany &lt;int&gt;,
+#   YearsInCurrentRole &lt;int&gt;, YearsSinceLastPromotion &lt;int&gt;,
+#   YearsWithCurrManager &lt;int&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="customize-your-model-assessment" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="customize-your-model-assessment"><span class="header-section-number">2.4</span> Customize your model assessment</h2>
+<p>Creating custom assessment functions is quite convenient when iterating through various models. The <code>metric_set()</code> function from the yardstickpackage can help you to achieve this.</p>
+<p>Define a function that returns <code>roc_auc</code>, <code>accuracy</code>, <code>sens(sensitivity)</code> and specificity <code>spec</code>(specificity) and use it to assess your model.</p>
+<p>The augmented data frame <code>lr_augis</code> already loaded and ready to go.</p>
+</section>
+<section id="instructions-2" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions-2">Instructions</h2>
+<ul>
+<li><p>Define a custom assessment function that returns <code>roc_auc</code>, <code>accuracy</code>, <code>sens</code>, and <code>spec</code>.</p></li>
+<li><p>Assess your model using your new function on <code>lr_augto</code> obtain the metrics you just chose.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a custom assessment function </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>class_evaluate <span class="ot">&lt;-</span> <span class="fu">metric_set</span>(roc_auc, accuracy, sens, spec)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Assess your model using your new function</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">class_evaluate</span>(lr_aug, <span class="at">truth =</span> Attrition,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">estimate =</span> .pred_class,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>               .pred_No)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary         0.843
+2 sens     binary         0.997
+3 spec     binary         0.05 
+4 roc_auc  binary         0.716</code></pre>
+</div>
+</div>
+</section>
+<section id="common-feature-transformations--video" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="common-feature-transformations--video">Common feature transformations -(video)</h2>
+<iframe src="https://drive.google.com/file/d/1dQnDYOXgQz0FBDFfTnrPscbOfSowGp3z/preview" width="640" height="480" allow="autoplay">
+</iframe>
+</section>
+<section id="common-transformations" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="common-transformations"><span class="header-section-number">2.5</span> Common transformations</h2>
+<p>This transformation has no restrictions on the values it can take.</p>
+<ul>
+<li><p>Box-Cox</p></li>
+<li><p><strong>Yeo-Johnson</strong></p></li>
+<li><p>Both Yeo-Johnson and Box-Cox can take any values</p></li>
+<li><p>Neither. Both accept only positive values</p></li>
+</ul>
+</section>
+<section id="plain-recipe" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="plain-recipe"><span class="header-section-number">2.6</span> Plain recipe</h2>
+<p>Using the <code>attrition_num</code> dataset with all numerical data about employees who have left the company, you want to build a model that can predict if an employee is likely to stay, using <code>Attrition</code>, a binary variable coded as a <code>factor</code>. To get started, you will define a plain recipe that does nothing other than define the model formula and the training data.</p>
+<p>The <code>attrition_numdata</code>, the logistic regression <code>lr_model</code>, the user-defined <code>class-evaluate()</code> function, and the trainand test splits are loaded for you.</p>
+</section>
+<section id="instructions-3" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions-3">Instructions</h2>
+<ul>
+<li>Create a plain recipe defining only the model formula.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a plain recipe defining only the model formula</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>lr_recipe_plain <span class="ot">&lt;-</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(Attrition <span class="sc">~</span>., <span class="at">data =</span> train)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>lr_workflow_plain <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(lr_model) <span class="sc">%&gt;%</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(lr_recipe_plain)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>lr_fit_plain <span class="ot">&lt;-</span> lr_workflow_plain <span class="sc">%&gt;%</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(train)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>lr_aug_plain <span class="ot">&lt;-</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  lr_fit_plain <span class="sc">%&gt;%</span> <span class="fu">augment</span>(test)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>lr_aug_plain <span class="sc">%&gt;%</span> <span class="fu">class_evaluate</span>(<span class="at">truth =</span> Attrition,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimate =</span> .pred_class,.pred_No)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary         0.843
+2 sens     binary         0.997
+3 spec     binary         0.05 
+4 roc_auc  binary         0.716</code></pre>
+</div>
+</div>
+</section>
+<section id="box-cox-transformation" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="box-cox-transformation"><span class="header-section-number">2.7</span> Box-Cox transformation</h2>
+<p>Using the <code>attrition_num</code> dataset with all numerical data about employees who have left the company, you want to build a model that can predict if an employee is likely to stay, using Attrition, a binary variable coded as a factor. To get the features to behave nearly normally, you will create a recipe that implements the Box-Cox transformation.</p>
+<p>The <code>attrition_numdata</code>, the logistic regression <code>lr_model</code>, the user-defined <code>class-evaluate()</code> function, and the <code>train</code> and <code>test</code> splits are loaded for you.</p>
+</section>
+<section id="instructions-4" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions-4">Instructions</h2>
+<ul>
+<li>Create a recipe that uses Box-Cox to transform all numeric features, including the target.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a recipe that uses Box-Cox to transform all numeric features</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>lr_recipe_BC <span class="ot">&lt;-</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(Attrition <span class="sc">~</span>., <span class="at">data =</span> train) <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">step_BoxCox</span>(<span class="fu">all_numeric</span>())</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>lr_workflow_BC <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(lr_model) <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(lr_recipe_BC)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>lr_fit_BC <span class="ot">&lt;-</span> lr_workflow_BC <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(train)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>lr_aug_BC <span class="ot">&lt;-</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  lr_fit_BC <span class="sc">%&gt;%</span> <span class="fu">augment</span>(test)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>lr_aug_BC <span class="sc">%&gt;%</span> <span class="fu">class_evaluate</span>(<span class="at">truth =</span> Attrition,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimate =</span> .pred_class,.pred_No)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary        0.846 
+2 sens     binary        0.997 
+3 spec     binary        0.0667
+4 roc_auc  binary        0.722 </code></pre>
+</div>
+</div>
+</section>
+<section id="yeo-johnson-transformation" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="yeo-johnson-transformation"><span class="header-section-number">2.8</span> Yeo-Johnson transformation</h2>
+<p>Using the <code>attrition_num</code> dataset with all numerical data about employees who have left the company, you want to build a model that can predict if an employee is likely to stay, using <code>Attrition</code>, a binary variable coded as a <code>factor</code>. To get the features to behave nearly normally, you will create a recipe that implements the Yeo-Johnson transformation.</p>
+<p>The <code>attrition_numdata</code>, the logistic regression <code>lr_model</code>, the user-defined <code>class-evaluate()</code> function, and the <code>train</code> and <code>test</code> splits are loaded for you.</p>
+</section>
+<section id="instructions-5" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions-5">Instructions</h2>
+<ul>
+<li>Create a recipe that uses Yeo-Johnson to transform all numeric features, including the target.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a recipe that uses Yeo-Johnson to transform all numeric features</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lr_recipe_YJ <span class="ot">&lt;-</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(Attrition <span class="sc">~</span>., <span class="at">data =</span> train) <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_YeoJohnson</span>(<span class="fu">all_numeric</span>())</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>lr_workflow_YJ <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(lr_model) <span class="sc">%&gt;%</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(lr_recipe_YJ)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>lr_fit_YJ <span class="ot">&lt;-</span> lr_workflow_YJ <span class="sc">%&gt;%</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(train)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>lr_aug_YJ <span class="ot">&lt;-</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  lr_fit_YJ <span class="sc">%&gt;%</span> <span class="fu">augment</span>(test)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>lr_aug_YJ <span class="sc">%&gt;%</span> <span class="fu">class_evaluate</span>(<span class="at">truth =</span> Attrition,</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimate =</span> .pred_class,.pred_No)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary        0.846 
+2 sens     binary        0.994 
+3 spec     binary        0.0833
+4 roc_auc  binary        0.705 </code></pre>
+</div>
+</div>
+</section>
+<section id="advanced-transformations--video" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="advanced-transformations--video">Advanced transformations -(video)</h2>
+<iframe src="https://drive.google.com/file/d/125-a0VWaoVsbScvmOjU4RuKYsx2VJmtq/preview" width="640" height="480" allow="autoplay">
+</iframe>
+</section>
+<section id="baseline" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="baseline"><span class="header-section-number">2.9</span> Baseline</h2>
+<p>Continuing with the <code>attrition_num</code> dataset, you will create a baseline with a plain recipe to assess the effects of additional feature engineering steps. The <code>attrition_num</code> data, the logistic regression <code>lr_model</code>, the user-defined <code>class-evaluate()</code> function, and the <code>train</code> and <code>test</code> splits have already been loaded for you.</p>
+</section>
+<section id="instructions-6" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions-6">Instructions</h2>
+<ul>
+<li><p>Bundle the model and recipe into a workflow.</p></li>
+<li><p>Augment the fitted workflow to get it ready for assessment.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>lr_recipe_plain <span class="ot">&lt;-</span> <span class="fu">recipe</span>(Attrition <span class="sc">~</span>., <span class="at">data =</span> train)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Bundle the model and recipe</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>lr_workflow_plain <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(lr_model) <span class="sc">%&gt;%</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(lr_recipe_plain)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>lr_fit_plain <span class="ot">&lt;-</span> lr_workflow_plain <span class="sc">%&gt;%</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(train)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Augment the fit workflow</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>lr_aug_plain <span class="ot">&lt;-</span> lr_fit_plain <span class="sc">%&gt;%</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">augment</span>(test)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>lr_aug_plain <span class="sc">%&gt;%</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">class_evaluate</span>(<span class="at">truth =</span> Attrition,<span class="at">estimate =</span> .pred_class,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>                 .pred_No)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary         0.843
+2 sens     binary         0.997
+3 spec     binary         0.05 
+4 roc_auc  binary         0.716</code></pre>
+</div>
+</div>
+</section>
+<section id="step_poly" class="level2" data-number="2.10">
+<h2 data-number="2.10" class="anchored" data-anchor-id="step_poly"><span class="header-section-number">2.10</span> <code>step_poly()</code></h2>
+<p>Now that you have a baseline, you can compare your model’s performance if you add a polynomial transformation to all numerical values.</p>
+<p>The <code>attrition_num</code> data, the logistic regression <code>lr_model</code>, the user-defined <code>class-evaluate()</code> function, and the <code>train</code> and <code>test</code> splits have already been loaded for you.</p>
+</section>
+<section id="instructions-7" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions-7">Instructions</h2>
+<ul>
+<li><p>Add a polynomial transformation to all numeric predictors.</p></li>
+<li><p>Fit workflow to the <code>train</code> data.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>lr_recipe_poly <span class="ot">&lt;-</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(Attrition <span class="sc">~</span>., <span class="at">data =</span> train) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a polynomial transformation to all numeric predictors</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_poly</span>(<span class="fu">all_numeric_predictors</span>())</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>lr_workflow_poly <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(lr_model) <span class="sc">%&gt;%</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(lr_recipe_poly)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit workflow to the train data</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>lr_fit_poly <span class="ot">&lt;-</span> lr_workflow_poly <span class="sc">%&gt;%</span> <span class="fu">fit</span>(train)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>lr_aug_poly <span class="ot">&lt;-</span> lr_fit_poly <span class="sc">%&gt;%</span> <span class="fu">augment</span>(test)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>lr_aug_poly <span class="sc">%&gt;%</span> <span class="fu">class_evaluate</span>(<span class="at">truth =</span> Attrition, <span class="at">estimate =</span> .pred_class,.pred_No)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary         0.854
+2 sens     binary         0.990
+3 spec     binary         0.15 
+4 roc_auc  binary         0.742</code></pre>
+</div>
+</div>
+</section>
+<section id="step_percentile" class="level2" data-number="2.11">
+<h2 data-number="2.11" class="anchored" data-anchor-id="step_percentile"><span class="header-section-number">2.11</span> <code>step_percentile()</code></h2>
+<p>How would applying a percentile transformation to your numeric variables affect model performance? Try it!</p>
+<p>The <code>attrition_num</code> data, the logistic regression <code>lr_model</code>, the user-defined <code>class-evaluate()</code> function, and the <code>train</code> and <code>test</code> splits have already been loaded for you.</p>
+</section>
+<section id="instructions-8" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions-8">Instructions</h2>
+<ul>
+<li>Apply a percentile transformation to all numeric predictors.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add percentile tansformation to all numeric predictors</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>lr_recipe_perc <span class="ot">&lt;-</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(Attrition <span class="sc">~</span>., <span class="at">data =</span> train) <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_percentile</span>(<span class="fu">all_numeric_predictors</span>())</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>lr_workflow_perc <span class="ot">&lt;-</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(lr_model) <span class="sc">%&gt;%</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(lr_recipe_perc)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>lr_fit_perc <span class="ot">&lt;-</span> lr_workflow_perc <span class="sc">%&gt;%</span> <span class="fu">fit</span>(train)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>lr_aug_perc <span class="ot">&lt;-</span> lr_fit_perc <span class="sc">%&gt;%</span> <span class="fu">augment</span>(test)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>lr_aug_perc <span class="sc">%&gt;%</span> <span class="fu">class_evaluate</span>(<span class="at">truth =</span> Attrition,</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">estimate =</span> .pred_class,.pred_No)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary         0.840
+2 sens     binary         0.994
+3 spec     binary         0.05 
+4 roc_auc  binary         0.723</code></pre>
+</div>
+</div>
+</section>
+<section id="whos-staying" class="level2" data-number="2.12">
+<h2 data-number="2.12" class="anchored" data-anchor-id="whos-staying"><span class="header-section-number">2.12</span> Who’s staying?</h2>
+<p>It’s time to practice combining several transformations to the <code>attrition_num</code> data. First, normalize or near-normalize numeric variables by applying a Yeo-Johnson transformation. Next, transform numeric predictors to percentiles, create dummy variables, and eliminate features with near zero variance.</p>
+</section>
+<section id="instructions-9" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instructions-9">Instructions</h2>
+<ul>
+<li><p>Apply a Yeo-Johnson transformation to all numeric variables.</p></li>
+<li><p>Transform all numeric predictors into percentiles.</p></li>
+<li><p>Create dummy variables for all nominal predictors.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>lr_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(Attrition <span class="sc">~</span>., <span class="at">data =</span> train) <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply a Yeo-Johnson transformation to all numeric variables</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_YeoJohnson</span>(<span class="fu">all_numeric</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Transform all numeric predictors into percentiles</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a> <span class="fu">step_percentile</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create dummy variables for all nominal predictors</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>())</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>lr_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lr_model) <span class="sc">%&gt;%</span> <span class="fu">add_recipe</span>(lr_recipe)</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>lr_fit <span class="ot">&lt;-</span> lr_workflow <span class="sc">%&gt;%</span> <span class="fu">fit</span>(train)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>lr_aug <span class="ot">&lt;-</span> lr_fit <span class="sc">%&gt;%</span> <span class="fu">augment</span>(test)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>lr_aug <span class="sc">%&gt;%</span> <span class="fu">class_evaluate</span>(<span class="at">truth =</span> Attrition, <span class="at">estimate =</span> .pred_class,.pred_No)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary         0.840
+2 sens     binary         0.994
+3 spec     binary         0.05 
+4 roc_auc  binary         0.723</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>ALLLLLL DONE</p>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -391,12 +894,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./01-FE.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">01-FE</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Parallel Processing</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./references.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">references</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">references</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
